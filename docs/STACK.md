@@ -13,6 +13,8 @@
 | gitleaks | Secret scanning locally and in CI. |
 | GitHub Actions + Dependabot | Thin CI wrapper over the local gates; weekly dependency updates. |
 
+The library itself has no runtime dependencies; it uses only the Python standard library.
+
 ## Discarded
 
 | Tool | Why not |
@@ -21,3 +23,4 @@
 | black + isort + flake8 | Replaced by ruff: one tool instead of three. |
 | tox / nox | The OS matrix lives in CI; locally a single `scripts/check.py` is enough. |
 | Shell scripts for gates | Not portable to Windows; the gates are a stdlib Python script. |
+| Microsoft Presidio | Requires spaCy models and hundreds of MB; this library is zero-dependency and reversible. |

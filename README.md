@@ -4,12 +4,11 @@
 [![License: MIT](https://img.shields.io/pypi/l/trysac-pii-redactor)](LICENSE)
 [![CI](https://github.com/Trysac/u009-pii-redactor/actions/workflows/ci.yml/badge.svg)](https://github.com/Trysac/u009-pii-redactor/actions/workflows/ci.yml)
 
-Detect and mask emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses before text reaches an LLM, with reversible placeholders and a written threat model
+Detect and mask emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses before text reaches an LLM, with reversible placeholders and a written threat model.
 
 ## Problem
 
-Describe in two or three sentences the concrete problem this utility solves, who hits it, and what
-they do today without it. Replace this paragraph when the first real feature lands.
+Prompts built from user content carry emails, phone numbers, card numbers and IBANs that should not leave the system. Regex snippets copied between projects miss cases, backtrack catastrophically or leak values through logs and reprs. This library detects common PII with linear, checksum-validated patterns, replaces it with stable placeholders and restores them in the model's answer from a local vault that never prints its contents.
 
 ## Install
 
@@ -24,16 +23,13 @@ Requires Python 3.10 or newer. No runtime dependencies.
 ## Usage
 
 ```python
-import pii_redactor
+from pii_redactor import redact, restore
 
-# normalize() trims surrounding whitespace and lower-cases the text.
-print(pii_redactor.normalize("  Hello World "))  # -> "hello world"
-
-# Blank input is rejected explicitly instead of returning an empty string.
-try:
-    pii_redactor.normalize("   ")
-except ValueError as exc:
-    print(f"rejected: {exc}")
+result = redact("Mail ana@example.com or +34 612 345 678")
+print(result.text)  # Mail <EMAIL_1> or <PHONE_1>
+print(result.counts)  # {'EMAIL': 1, 'PHONE': 1}
+print(repr(result.vault))  # Vault(2 entries)
+print(restore("Reply to <EMAIL_1>", result.vault))  # Reply to ana@example.com
 ```
 
 ## Documentation
