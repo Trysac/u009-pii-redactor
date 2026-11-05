@@ -9,4 +9,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Added `redact`/`restore` with EMAIL, PHONE, CARD (Luhn), IBAN (ISO 13616) and IPV4 detectors, custom `Detector` support, a reversible `Vault`, typed `RedactorError` codes, input size limits and a written threat model.
+
+
+### Added
+
 - Initial project structure from the factory utility template.
