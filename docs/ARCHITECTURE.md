@@ -2,22 +2,27 @@
 
 ## Purpose
 
-`trysac-pii-redactor` is a small, dependency-free Python library: Detect and mask emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses before text reaches an LLM, with reversible placeholders and a written threat model
+`trysac-pii-redactor` is a small, dependency-free Python library. It detects emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses, replaces them with reversible placeholders, and restores them from a local vault.
 
 ## Shape
 
 ```text
 caller code --> pii_redactor (public API in __init__.py)
                     |
-                    +-- pure functions, no I/O, no global state
+                    +-- core.py: redact / restore (pure, no I/O)
+                    +-- detectors.py: Detector and BUILTIN_DETECTORS
+                    +-- vault.py: in-memory Vault (placeholder <-> value)
+                    +-- errors.py: RedactorError with a stable code
 ```
 
 - **Public API**: the names listed in `__all__` of `src/pii_redactor/__init__.py`. Anything else is
   internal and may change without a major version.
-- **Errors**: invalid input raises built-in exceptions (`ValueError`, `TypeError`) with a clear
-  message; the library never prints or exits.
-- **Side effects**: none. If a feature needs I/O, isolate it in its own module behind a small
-  interface and record the choice in an ADR.
+- **Redaction algorithm**: every detector runs, candidates rejected by `validate` are dropped,
+  overlaps are resolved by longest span then earliest start, and the rest are replaced.
+- **Errors**: invalid input raises `RedactorError` (a `ValueError` subclass) with a stable `code`
+  and a static message that never contains the input text.
+- **Side effects**: none. Logging uses `logging.getLogger(__name__)` with a `NullHandler`; the
+  library never configures logging.
 
 ## Quality contract
 

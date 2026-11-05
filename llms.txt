@@ -1,7 +1,6 @@
 # pii-redactor
 
-> Detect and mask emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses before text reaches an LLM, with reversible placeholders and a written threat model Python package `trysac-pii-redactor`, import name `pii_redactor`, MIT licensed,
-> Python >= 3.10, no runtime dependencies.
+> Detect and mask emails, phones, Luhn-valid cards, ISO 13616 IBANs and IPv4 addresses before text reaches an LLM, with reversible placeholders and a written threat model. Python package `trysac-pii-redactor`, import name `pii_redactor`, MIT licensed, Python >= 3.10, no runtime dependencies.
 
 ## Docs
 
